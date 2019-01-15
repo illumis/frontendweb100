@@ -1,49 +1,54 @@
 import './styles.css';
 import { getRandomInt, ready } from './utils';
 
-let secretNumber, squares;
+let 
+    secretNumber, 
+    gameTiles,
+    gameTileClass = 'square',
+    winningTileClass = 'winner',
+    loosingTileClass = 'loser';
 
 function doIt() {
-    // find all squares
-    squares = document.querySelectorAll('.square');
-    console.log('Squares detected: ', squares.length);
+    // find all gameTiles
+    gameTiles = document.querySelectorAll('.' + gameTileClass);
+    console.log(gameTileClass,'s detected: ', gameTiles.length);
     /*Notes:
         The statement below selects only the first found DOM element rather than all matching elements as the statement above does)
             document.querySelector('.square');
     */
 
     // each should do something when clicked
-    squares.forEach(function(square, index) {
-        square.addEventListener('click', handleClick);
-        square.dataset.number = (index+1).toString();
+    gameTiles.forEach(function(gameTile, index) {
+        gameTile.addEventListener('click', handleClick);
+        gameTile.dataset.number = (index+1).toString();
     });
 
     // get a random number
-    secretNumber = getRandomInt(1, squares.length);
+    secretNumber = getRandomInt(1, gameTiles.length);
     console.log('Secret# is: ', secretNumber);
 }
 
 function handleClick(evt) {
-    let currentSquare = this;
+    let currentTile = this;
     let selectedElementInt = parseInt(this.dataset.number);
     
     if(selectedElementInt === secretNumber) {
-        console.log('You Won with tile #',selectedElementInt,'!');
-        this.classList.add('winner');
+        console.log('You Won with ',gameTileClass,' #',selectedElementInt,'!');
+        this.classList.add(winningTileClass);
         // this.removeEventListener('click', handleclick)
 
-        squares.forEach(function(square){
-            //disable all squares
-            square.removeEventListener('click', handleClick);
+        gameTiles.forEach(function(gameTile){
+            //disable all gameTiles
+            gameTile.removeEventListener('click', handleClick);
 
             //make others grey (if they don't already have it)
-            if (square !== currentSquare && !square.classList.contains('loser')){
-                square.classList.add('loser');
+            if (gameTile !== currentTile && !gameTile.classList.contains(loosingTileClass)){
+                gameTile.classList.add(loosingTileClass);
             }
         });
     } else {
         console.log('Try again, ...');
-        this.classList.add('loser');
+        this.classList.add(loosingTileClass);
     }
     
 }
